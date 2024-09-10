@@ -12,3 +12,25 @@
 ```javascript
 isPalindrome("A man a plan a canal Panama"); // should return true
 ```
+function isPalindrome(String){
+    //make lowercase
+
+    const lowerCaseString = toLowerCase(String) ;
+
+    //get rid of punctuation and spaces - replace (anything that is not ) with nothing  (AN -Alpha numerical)
+
+    const ANString = lowerCaseString.replace(/[^a-z0-9]/g,'');
+
+    //reverse 
+
+    const ANStringReverse = ANString.split('').reverse().join('')
+
+    //check if they are the same 
+
+    return ANStringReverse == ANString ; 
+
+
+
+
+
+}
