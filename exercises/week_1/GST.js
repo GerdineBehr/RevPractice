@@ -8,17 +8,16 @@ const rl = readline.createInterface({
 //Beginning my grocery list with groceryList array to hold items 
 
 let groceryList = []; //let because the value can change as we add items , [] for empty array 
+const amounts = {};
+const prices = {};
+const purchased = {};
 
 // Function list for users 
 /* users need to be able to 
 
--ADD 
-    -Item names
-    -Quantities 
-    -Prices
+-ADD
     -Item's bought 
     -Remove Items 
-    -Set whether existing item has been bought 
 
     */
     const listOptions = () => { //arrow function to display options
@@ -26,6 +25,7 @@ let groceryList = []; //let because the value can change as we add items , [] fo
       console.log("Add");
       console.log("Remove");
       console.log("View");
+      console.log("Purchase Status")
     } ;
 
     //call function to display options 
@@ -36,29 +36,92 @@ let groceryList = []; //let because the value can change as we add items , [] fo
 
     const processOption = (line) => { //stores option to be used
 
+      const trimmedLine = line.trim();
+        //ADD
       //checks if user input is Add New Item
 
-      if(line.startsWith('Add ')){
-        const item = line.slice(4);
-        groceryList.push(item); // adds each item to grocery list
+      if(trimmedLine.startsWith('Add ')){
+
+        const item = trimmedLine.slice(4).trim(); // remove add and trim extra spaces 
+        
+        rl.question(`How many ${item} do you want to add?`, (quantity) => {
+          const amount = parseInt(quantity.trim(), 10); //process the input line
+          if(isNaN(amount) || amount <=0 ){
+            console.log("Invalid quantity. Please enter a positive number.");
+            rl.prompt();
+          }else{
+            rl.question("Enter price in the format [0.00] ", (cost) => {
+              const price = parseFloat(cost.trim());
+              if(isNaN(price) || price <=0) {
+                console.log("Invalid price, please try again.");
+                rl.prompt();
+              } else {
+            groceryList.push(item);
+            amounts[item] = (amounts[item] || 0) + amount; //update quantity
+            prices[item] = price; //update price 
+            purchased[item] = false; // set purchased status to false 
+            console.log(`${amount} ${item} added for $${price.toFixed(2)} each. `);
+             listOptions();
+             }
+            });
+          }
+        });
       }
-      else if(line === View){
+
+      //VIEW  
+      else if(trimmedLine === 'View'){
+        console.log("\nYour Grocery List:");
+        if(groceryList.length === 0){
+          console.log("Your list is empty.");
+        } else {
         groceryList.forEach((item, index) => {
-          console.log(`${index + 1} , ${item}`);
-        })
+          const status = purchased[item] ? "Yes" : "No"
+          console.log(`${index + 1}. ${amounts[item]} ${item} - Price: $${prices[item]} each - Bought: [${status}]`);
+
+        });
+        }
+        rl.prompt();
       }
-      else if(line === "Exit"){
+
+      //Purchase Status 
+      else if(trimmedLine === 'Purchase Status'){
+        rl.question("Enter the name of the item that you have purchased: ", (boughtItem) => {
+          const item = boughtItem.trim();
+        if(groceryList.includes(item)){
+          purchased[item] = true; //Mark item purchased
+        console.log(`${item} has been marked as purchased.`);
+      } else {
+        console.log(`${item} is not in your grocery list.`);
+      }
+      
+      // Now display the grocery list
+    console.log("\nYour Grocery List:");
+    if (groceryList.length === 0) {
+      console.log("Your list is empty.");
+    } else {
+      groceryList.forEach((item, index) => {
+        const status = purchased[item] ? "Yes" : "No";
+        console.log(`${index + 1}. ${amounts[item]} ${item}(s) - Price: $${prices[item]} each - Bought: ${status}`);
+      });
+    }
+
+    rl.prompt();
+  });
+}
+      // exit 
+     else if(trimmedLine === "Exit"){
         rl.close();
       }
+
+      //Invalid input
       else {
-        console.log("No Item Found");}
+        console.log("Invalid command. Please try again.");
+
+        rl.prompt();
+      }
   };
 
-   //Readline interface set up that was given to you (MUST EDIT)
-
-rl.on('line', (line) => {
-    console.log(line);
-});
+  //Readline interface set up that was given to you (MUST EDIT)
 
 rl.on('line', (line) => {
   processOption(line); //process the input line
@@ -67,5 +130,5 @@ rl.on('line', (line) => {
 // Handle when the readline interface is closed 
 rl.once('close', () => {
      // end of input
-     console.log("Goodbye");
+     console.log("Goodbye"); 
  });
