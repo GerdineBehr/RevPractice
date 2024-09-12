@@ -22,8 +22,8 @@ const purchased = {};
     */
     const listOptions = () => { //arrow function to display options
       console.log("\nO p t i o n s :");
-      console.log("Add");
-      console.log("Remove");
+      console.log("Add - Add [Item]");
+      console.log("Remove - Remove [Item] ");
       console.log("View");
       console.log("Purchase Status")
     } ;
@@ -107,6 +107,35 @@ const purchased = {};
 
     rl.prompt();
   });
+}
+      
+// REMOVE
+else if (trimmedLine.startsWith('Remove ')) {
+  const item = trimmedLine.slice(7).trim(); // Get the item name after 'Remove ' and trim spaces
+
+  if (groceryList.includes(item)) {
+    const index = groceryList.indexOf(item);
+    groceryList.splice(index, 1); // Remove the item from the grocery list
+    delete amounts[item];
+    delete prices[item];
+    delete purchased[item];
+
+    console.log(`${item} has been removed from your grocery list.`);
+  } else {
+    console.log(`${item} is not in your grocery list.`);
+  }
+
+  // Show the updated grocery list
+  console.log("\nYour Grocery List:");
+  if (groceryList.length === 0) {
+    console.log("Your list is empty.");
+  } else {
+    groceryList.forEach((item, index) => {
+      const status = purchased[item] ? "Yes" : "No";
+      console.log(`${index + 1}. ${amounts[item]} ${item} - Price: $${prices[item]} each - Bought: [${status}]`);
+    });
+  }
+  rl.prompt();
 }
       // exit 
      else if(trimmedLine === "Exit"){
