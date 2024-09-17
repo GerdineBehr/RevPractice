@@ -1,2 +1,29 @@
 2024-09-17T20:23:21.473Z [info]: Server running at http://localhost:3000
 2024-09-17T20:23:21.481Z [info]: No existing data file found, starting with empty data.
+2024-09-17T20:36:02.614Z [info]: Server listening on port 3000
+2024-09-17T20:36:30.162Z [info]: Server listening on port 3000
+2024-09-17T20:41:00.480Z [info]: Server listening on port 3000
+2024-09-17T20:41:13.156Z [info]: [GET /items]
+2024-09-17T20:44:59.093Z [info]: [GET /items]
+2024-09-17T20:50:58.553Z [info]: [GET /items]
+2024-09-17T20:51:42.915Z [info]: [GET /items]
+2024-09-17T20:52:33.935Z [info]: [GET /items]
+2024-09-17T20:52:40.046Z [info]: [GET /items]
+2024-09-17T20:55:50.582Z [info]: [GET /items]
+2024-09-17T20:59:09.042Z [info]: [GET /items]
+2024-09-17T21:02:48.303Z [info]: [GET /items]
+2024-09-17T21:07:56.816Z [info]: [GET /items]
+2024-09-17T21:47:29.229Z [info]: Server listening on port 3000
+2024-09-17T21:51:35.917Z [info]: AWS_REGION: us-east-2
+2024-09-17T21:51:35.921Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-17T21:51:35.921Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-17T21:51:35.923Z [info]: Server listening on port 3000
+2024-09-17T21:53:07.958Z [info]: [GET /items]
+2024-09-17T21:53:07.959Z [info]: Attempting to retrieve items from DynamoDB
+2024-09-17T21:53:08.198Z [info]: Data retrieved: [{"Purchased":{"BOOL":false},"Price":{"N":"1"},"Quantity":{"N":"2"},"ItemID":{"S":"1"},"Name":{"S":"Apple"}}]
+2024-09-17T21:53:15.976Z [info]: [GET /items]
+2024-09-17T21:53:15.977Z [info]: Attempting to retrieve items from DynamoDB
+2024-09-17T21:53:16.014Z [info]: Data retrieved: [{"Purchased":{"BOOL":false},"Price":{"N":"1"},"Quantity":{"N":"2"},"ItemID":{"S":"1"},"Name":{"S":"Apple"}}]
+2024-09-17T22:10:26.761Z [info]: [GET /items]
+2024-09-17T22:10:26.772Z [info]: Attempting to retrieve items from DynamoDB
+2024-09-17T22:10:27.068Z [info]: Data retrieved: [{"Purchased":{"BOOL":false},"Price":{"N":"1"},"Quantity":{"N":"2"},"ItemID":{"S":"1"},"Name":{"S":"Apple"}}]
