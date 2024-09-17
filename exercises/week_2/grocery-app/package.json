@@ -1,0 +1,21 @@
+{
+  "name": "grocery-app",
+  "version": "1.0.0",
+  "main": "ServerDAO.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "@colors/colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "winston": "^3.3.3"
+  }
+}
