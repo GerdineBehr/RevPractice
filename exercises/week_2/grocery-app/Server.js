@@ -176,3 +176,5 @@ server.listen(PORT, () => {
 logger.info(`AWS_REGION: ${process.env.AWS_REGION}`);
 logger.info(`AWS_ACCESS_KEY_ID: ${process.env.AWS_ACCESS_KEY_ID}`);
 logger.info(`AWS_SECRET_ACCESS_KEY: ${process.env.AWS_SECRET_ACCESS_KEY}`);
+console.log("AWS_REGION:", process.env.AWS_REGION);
+
