@@ -86,8 +86,50 @@ const server = http.createServer((req, res) => {
             default:
                 sendJSONResponse(res, 404, { error: 'Not Found' });
                 break;
-        }})
-    });    
+        
+        
+                case 'POST':
+    if (url === '/items') {
+        try {
+            const newItem = JSON.parse(body);
+            const { itemID, name, quantity, price, purchased } = newItem;
+
+            // Validate input
+            if (!itemID || typeof itemID !== 'string' || !name || typeof name !== 'string' || isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+                sendJSONResponse(res, 400, { message: 'Invalid input' });
+                return;
+            }
+
+            // Create the item object as per DynamoDB schema
+            const item = {
+                ItemID: itemID, 
+                Name: name,
+                Price: price.toString(), // Convert number to string
+                Quantity: quantity.toString(), // Convert number to string
+                Purchased: !!purchased // Ensure it's a boolean
+            };
+
+            // Create the item in DynamoDB
+            const command = new PutCommand({
+                TableName,
+                Item: item
+            });
+
+            await documentClient.send(command);
+            sendJSONResponse(res, 201, { message: 'Item added successfully' });
+
+        } catch (err) {
+            console.error(err);
+            sendJSONResponse(res, 500, { message: 'Failed to add item', error: err.message });
+        }
+    }
+
+                
+        
+                
+                }
+        })});
+    
         
         server.listen(PORT, () => {
             logger.info(`Server listening on port ${PORT}`);

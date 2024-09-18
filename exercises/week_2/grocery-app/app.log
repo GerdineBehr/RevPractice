@@ -27,3 +27,81 @@
 2024-09-17T22:10:26.761Z [info]: [GET /items]
 2024-09-17T22:10:26.772Z [info]: Attempting to retrieve items from DynamoDB
 2024-09-17T22:10:27.068Z [info]: Data retrieved: [{"Purchased":{"BOOL":false},"Price":{"N":"1"},"Quantity":{"N":"2"},"ItemID":{"S":"1"},"Name":{"S":"Apple"}}]
+2024-09-17T23:17:09.435Z [info]: AWS_REGION: us-east-2
+2024-09-17T23:17:09.446Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-17T23:17:09.446Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-17T23:17:09.448Z [info]: Server listening on port 3000
+2024-09-17T23:17:31.186Z [info]: [GET /items]
+2024-09-17T23:17:31.187Z [info]: Attempting to retrieve items from DynamoDB
+2024-09-17T23:17:31.457Z [info]: Data retrieved: [{"Purchased":{"BOOL":false},"Price":{"N":"1"},"Quantity":{"N":"2"},"ItemID":{"S":"1"},"Name":{"S":"Apple"}}]
+2024-09-17T23:18:09.395Z [info]: [POST /items]
+2024-09-17T23:31:45.411Z [info]: AWS_REGION: us-east-2
+2024-09-17T23:31:45.428Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-17T23:31:45.429Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-17T23:31:45.436Z [info]: Server listening on port 3000
+2024-09-17T23:31:55.061Z [info]: [POST /items]
+2024-09-17T23:32:14.863Z [info]: [POST /items]
+2024-09-17T23:32:21.208Z [info]: [POST /items]
+2024-09-17T23:32:27.808Z [info]: [POST /items]
+2024-09-17T23:32:42.513Z [info]: [POST /items]
+2024-09-17T23:32:48.966Z [info]: [POST /items]
+2024-09-17T23:34:27.065Z [info]: AWS_REGION: us-east-2
+2024-09-17T23:34:27.080Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-17T23:34:27.081Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-17T23:34:27.084Z [info]: Server listening on port 3000
+2024-09-17T23:34:31.803Z [info]: [POST /items]
+2024-09-17T23:42:37.680Z [info]: AWS_REGION: us-east-2
+2024-09-17T23:42:37.701Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-17T23:42:37.702Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-17T23:42:37.705Z [info]: Server listening on port 3000
+2024-09-17T23:42:43.185Z [info]: [POST /items]
+2024-09-17T23:42:50.747Z [info]: [POST /items]
+2024-09-17T23:44:47.343Z [info]: [POST /items]
+2024-09-17T23:44:52.820Z [info]: [POST /items]
+2024-09-17T23:45:39.041Z [info]: [POST /items]
+2024-09-17T23:47:50.336Z [info]: [POST /items]
+2024-09-17T23:48:05.813Z [info]: [POST /items]
+2024-09-17T23:48:26.648Z [info]: [POST /items]
+2024-09-17T23:48:35.294Z [info]: [POST /items]
+2024-09-17T23:50:22.172Z [info]: [POST /items]
+2024-09-17T23:50:47.725Z [info]: [POST /items]
+2024-09-17T23:54:17.765Z [info]: [POST /items]
+2024-09-18T00:07:46.866Z [info]: [POST /items]
+2024-09-18T00:08:15.149Z [info]: [POST /items]
+2024-09-18T00:10:01.657Z [info]: [POST /items]
+2024-09-18T00:10:42.244Z [info]: [POST /items]
+2024-09-18T00:13:12.751Z [info]: [POST /items]
+2024-09-18T00:15:01.876Z [info]: [POST /items]
+2024-09-18T00:15:42.306Z [info]: AWS_REGION: us-east-2
+2024-09-18T00:15:42.310Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-18T00:15:42.311Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-18T00:15:42.312Z [info]: Server listening on port 3000
+2024-09-18T00:15:51.870Z [info]: [POST /items]
+2024-09-18T00:15:51.871Z [info]: Raw body received: {
+    "name": "Apple",
+    "quantity": 3,
+    "price": 1.5,
+    "purchased": false
+}
+
+2024-09-18T00:15:51.873Z [info]: Parsed new item: {"name":"Apple","quantity":3,"price":1.5,"purchased":false}
+2024-09-18T00:15:51.874Z [info]: Item to be added to DynamoDB: {"ItemID":{"S":"1726618551874"},"Name":{"S":"Apple"},"Price":{"N":"1.5"},"Quantity":{"N":"3"},"Purchased":{"BOOL":false}}
+2024-09-18T00:15:52.165Z [error]: Failed to add item: One or more parameter values were invalid: Type mismatch for key ItemID expected: S actual: M
+2024-09-18T00:18:15.913Z [info]: AWS_REGION: us-east-2
+2024-09-18T00:18:15.916Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-18T00:18:15.917Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-18T00:18:15.918Z [info]: Server listening on port 3000
+2024-09-18T00:18:24.387Z [info]: [POST /items]
+2024-09-18T00:19:05.367Z [info]: [POST /items]
+2024-09-18T00:20:06.139Z [info]: AWS_REGION: us-east-2
+2024-09-18T00:20:06.143Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-18T00:20:06.144Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-18T00:20:06.145Z [info]: Server listening on port 3000
+2024-09-18T00:37:56.446Z [info]: [POST /items]
+2024-09-18T00:42:45.052Z [info]: [POST /items]
+2024-09-18T00:44:32.763Z [info]: [POST /items]
+2024-09-18T01:01:31.016Z [info]: AWS_REGION: us-east-2
+2024-09-18T01:01:31.019Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-18T01:01:31.020Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-18T01:01:31.021Z [info]: Server listening on port 3000
+2024-09-18T01:01:36.041Z [info]: [POST /items]
