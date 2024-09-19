@@ -113,84 +113,161 @@ const server = http.createServer((req, res) => {
                 break;
 
                 case 'PUT':
-    if (url === '/items') {
-        try {
-            // Parse the incoming request body
-            const updateItem = JSON.parse(body);
-            const { itemname } = updateItem;
-            console.log(`Received item: ${itemname}`);
+                    if (url === '/items') {
+                        try {
+                            // Parse the incoming request body
+                            const updateItem = JSON.parse(body);
+                            const { itemname } = updateItem;
+                            console.log(`Received item: ${itemname}`);
 
-            // Validate input
-            if (!itemname || typeof itemname !== 'string') {
-                sendJSONResponse(res, 400, { message: 'Invalid input' });
-                return;
-            }
+                            // Validate input
+                            if (!itemname || typeof itemname !== 'string') {
+                                sendJSONResponse(res, 400, { message: 'Invalid input' });
+                                return;
+                            }
 
-            // Function to scan items by name
-            async function scanItemsByName(Name) {
-                const getCommand = new ScanCommand({
-                    TableName,
-                    FilterExpression: "#name = :name",
-                    ExpressionAttributeNames: {
-                        '#name': 'Name'
-                    },
-                    ExpressionAttributeValues: {
-                        ":name": { S: Name }
-                    },
-                });
+                            // Function to scan items by name
+                            async function scanItemsByName(Name) {
+                                const getCommand = new ScanCommand({
+                                    TableName,
+                                    FilterExpression: "#name = :name",
+                                    ExpressionAttributeNames: {
+                                        '#name': 'Name'
+                                    },
+                                    ExpressionAttributeValues: {
+                                        ":name": { S: Name }
+                                    },
+                                });
 
-                console.log("ScanCommand being sent:", JSON.stringify(getCommand));
+                                console.log("ScanCommand being sent:", JSON.stringify(getCommand));
 
-                try {
-                    const data = await documentClient.send(getCommand);
-                    console.log("Scan result:", data);
+                                try {
+                                    const data = await documentClient.send(getCommand);
+                                    console.log("Scan result:", data);
 
-                    if (!data.Items || data.Items.length === 0) {
-                        console.log("No items found");
-                        return null; // No item found with the provided name
+                                    if (!data.Items || data.Items.length === 0) {
+                                        console.log("No items found");
+                                        return null; // No item found with the provided name
+                                    }
+
+                                    const item = data.Items[0]; // Assuming name is unique
+                                    console.log("Found item:", item);
+                                    return item;
+                                } catch (scanError) {
+                                    console.error("Error during scan:", scanError);
+                                    throw scanError; // Re-throw the error to be handled by the calling function
+                                }
+                            }
+
+                            // Scan for item
+                            const item = await scanItemsByName(itemname);
+                            if (!item) {
+                                sendJSONResponse(res, 404, { message: 'Item not found' });
+                                return; // Stop if no item found
+                            }
+
+                            // Update the item, setting purchased to false by default
+                            const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+
+                            const updateCommand = new UpdateCommand({
+                                TableName,
+                                Key: { ItemID: Number(item.ItemID.N) }, // Directly use the number
+                                UpdateExpression: 'SET Purchased = :purchased',
+                                ExpressionAttributeValues: {
+                                    ':purchased': true // Default value
+                                }
+                            });
+
+                            console.log("Attempting to update item with key:", { ItemID: Number(item.ItemID.N) });
+
+                            // Execute the command 
+                            await documentClient.send(updateCommand);
+                            console.log("Update successful");
+                            sendJSONResponse(res, 200, { message: 'Item updated successfully' });
+
+                        } catch (error) {
+                            console.error("Error updating item:", error);
+                            sendJSONResponse(res, 500, { message: 'Internal Server Error', error: error.message });
+                        }
                     }
+                    break;
 
-                    const item = data.Items[0]; // Assuming name is unique
-                    console.log("Found item:", item);
-                    return item;
-                } catch (scanError) {
-                    console.error("Error during scan:", scanError);
-                    throw scanError; // Re-throw the error to be handled by the calling function
-                }
-            }
+                    case 'DELETE': 
+                    if (url === '/items') {
+                        try {
+                            // Parse the incoming request body
+                            const deleteItem = JSON.parse(body);
+                            const { itemname } = deleteItem;
+                            console.log(`Received item: ${itemname}`);
 
-            // Scan for item
-            const item = await scanItemsByName(itemname);
-            if (!item) {
-                sendJSONResponse(res, 404, { message: 'Item not found' });
-                return; // Stop if no item found
-            }
+                            // Validate input
+                            if (!itemname || typeof itemname !== 'string') {
+                                sendJSONResponse(res, 400, { message: 'Invalid input' });
+                                return;
+                            }
 
-            // Update the item, setting purchased to false by default
-            const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+                            // Function to scan items by name
+                            async function scanItemsByName(Name) {
+                                const getCommand = new ScanCommand({
+                                    TableName,
+                                    FilterExpression: "#name = :name",
+                                    ExpressionAttributeNames: {
+                                        '#name': 'Name'
+                                    },
+                                    ExpressionAttributeValues: {
+                                        ":name": { S: Name }
+                                    },
+                                });
 
-            const updateCommand = new UpdateCommand({
-                TableName,
-                Key: { ItemID: Number(item.ItemID.N) }, // Directly use the number
-                UpdateExpression: 'SET Purchased = :purchased',
-                ExpressionAttributeValues: {
-                    ':purchased': true // Default value
-                }
-            });
+                                console.log("ScanCommand being sent:", JSON.stringify(getCommand));
 
-            console.log("Attempting to update item with key:", { ItemID: Number(item.ItemID.N) });
+                                try {
+                                    const data = await documentClient.send(getCommand);
+                                    console.log("Scan result:", data);
 
-            // Execute the command 
-            await documentClient.send(updateCommand);
-            console.log("Update successful");
-            sendJSONResponse(res, 200, { message: 'Item updated successfully' });
+                                    if (!data.Items || data.Items.length === 0) {
+                                        console.log("No items found");
+                                        return null; // No item found with the provided name
+                                    }
 
-        } catch (error) {
-            console.error("Error updating item:", error);
-            sendJSONResponse(res, 500, { message: 'Internal Server Error', error: error.message });
-        }
-    }
-    break;
+                                    const item = data.Items[0]; // Assuming name is unique
+                                    console.log("Found item:", item);
+                                    return item;
+                                } catch (scanError) {
+                                    console.error("Error during scan:", scanError);
+                                    throw scanError; // Re-throw the error to be handled by the calling function
+                                }
+                            }
+
+                            // Scan for item
+                            const item = await scanItemsByName(itemname);
+                            if (!item) {
+                                sendJSONResponse(res, 404, { message: 'Item not found' });
+                                return; // Stop if no item found
+                            }
+
+                            // DELETE the item
+                            const { DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+
+                            const deleteCommand = new DeleteCommand({
+                                TableName,
+                                Key: { ItemID: Number(item.ItemID.N) }, // Directly use the number
+                            });
+
+                            console.log("Attempting to delete item with key:", { ItemID: Number(item.ItemID.N) });
+
+                            // Execute the command 
+                            await documentClient.send(deleteCommand);
+                            console.log("Delete successful");
+                            sendJSONResponse(res, 200, { message: 'Item deleted successfully' });
+
+                        } catch (error) {
+                            console.error("Error deleting item:", error);
+                            sendJSONResponse(res, 500, { message: 'Internal Server Error', error: error.message });
+                        }
+                    }
+                    break;
+
             default:
                 console.log("The default was used");
                 sendJSONResponse(res, 404, { error: 'Not Found' });
