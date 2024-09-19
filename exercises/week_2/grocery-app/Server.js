@@ -81,7 +81,7 @@ const server = http.createServer((req, res) => {
                         const { itemID, name, quantity, price, purchased } = newItem;
 
                         // Validate input
-                        if (!itemID || typeof itemID !== 'string' || !name || typeof name !== 'string' || isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+                        if (!itemID || typeof itemID !== 'number' || !name || typeof name !== 'string' || isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
                             sendJSONResponse(res, 400, { message: 'Invalid input' });
                             return;
                         }
@@ -94,6 +94,7 @@ const server = http.createServer((req, res) => {
                             Quantity: quantity.toString(), // Convert number to string
                             Purchased: !!purchased // Ensure it's a boolean
                         };
+                        
 
                         // Create the item in DynamoDB
                         const command = new PutCommand({
@@ -111,63 +112,92 @@ const server = http.createServer((req, res) => {
                 }
                 break;
 
-            case 'PUT':
-                if (url === '/items') {
-                    try {
-                        // Parse the incoming request body
-                        const updateItem = JSON.parse(body);
-                        const { name } = updateItem;
+                case 'PUT':
+    if (url === '/items') {
+        try {
+            // Parse the incoming request body
+            const updateItem = JSON.parse(body);
+            const { itemname } = updateItem;
+            console.log(`Received item: ${itemname}`);
 
-                        // Validate input
-                        if (!name || typeof name !== 'string') {
-                            sendJSONResponse(res, 400, { message: 'Invalid input' });
-                            return;
-                        }
+            // Validate input
+            if (!itemname || typeof itemname !== 'string') {
+                sendJSONResponse(res, 400, { message: 'Invalid input' });
+                return;
+            }
 
-                        // Find the item by name (assuming name is unique)
-                        const getCommand = new QueryCommand({
-                            TableName,
-                            IndexName: 'NameIndex', // Ensure this GSI exists or use ScanCommand if needed
-                            KeyConditionExpression: 'Name = :name',
-                            ExpressionAttributeValues: {
-                                ':name': name
-                            }
-                        });
+            // Function to scan items by name
+            async function scanItemsByName(Name) {
+                const getCommand = new ScanCommand({
+                    TableName,
+                    FilterExpression: "#name = :name",
+                    ExpressionAttributeNames: {
+                        '#name': 'Name'
+                    },
+                    ExpressionAttributeValues: {
+                        ":name": { S: Name }
+                    },
+                });
 
-                        const data = await documentClient.send(getCommand);
-                        const item = data.Items[0]; // Assuming name is unique, so get the first match
+                console.log("ScanCommand being sent:", JSON.stringify(getCommand));
 
-                        if (!item) {
-                            sendJSONResponse(res, 404, { message: 'Item not found' });
-                            return;
-                        }
+                try {
+                    const data = await documentClient.send(getCommand);
+                    console.log("Scan result:", data);
 
-                        // Update the item, setting purchased to false by default
-                        const updateCommand = new UpdateCommand({
-                            TableName,
-                            Key: { ItemID: item.ItemID },
-                            UpdateExpression: 'SET Purchased = :purchased',
-                            ExpressionAttributeValues: {
-                                ':purchased': false // Default value
-                            }
-                        });
-
-                        await documentClient.send(updateCommand);
-                        sendJSONResponse(res, 200, { message: 'Item updated successfully' });
-
-                    } catch (err) {
-                        console.error(err);
-                        sendJSONResponse(res, 500, { message: 'Failed to update item', error: err.message });
+                    if (!data.Items || data.Items.length === 0) {
+                        console.log("No items found");
+                        return null; // No item found with the provided name
                     }
-                }
-                break;
 
+                    const item = data.Items[0]; // Assuming name is unique
+                    console.log("Found item:", item);
+                    return item;
+                } catch (scanError) {
+                    console.error("Error during scan:", scanError);
+                    throw scanError; // Re-throw the error to be handled by the calling function
+                }
+            }
+
+            // Scan for item
+            const item = await scanItemsByName(itemname);
+            if (!item) {
+                sendJSONResponse(res, 404, { message: 'Item not found' });
+                return; // Stop if no item found
+            }
+
+            // Update the item, setting purchased to false by default
+            const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+
+            const updateCommand = new UpdateCommand({
+                TableName,
+                Key: { ItemID: Number(item.ItemID.N) }, // Directly use the number
+                UpdateExpression: 'SET Purchased = :purchased',
+                ExpressionAttributeValues: {
+                    ':purchased': true // Default value
+                }
+            });
+
+            console.log("Attempting to update item with key:", { ItemID: Number(item.ItemID.N) });
+
+            // Execute the command 
+            await documentClient.send(updateCommand);
+            console.log("Update successful");
+            sendJSONResponse(res, 200, { message: 'Item updated successfully' });
+
+        } catch (error) {
+            console.error("Error updating item:", error);
+            sendJSONResponse(res, 500, { message: 'Internal Server Error', error: error.message });
+        }
+    }
+    break;
             default:
+                console.log("The default was used");
                 sendJSONResponse(res, 404, { error: 'Not Found' });
                 break;
-        }
-    });
-});
+            }}) //ends switch
+            });
+
 
 server.listen(PORT, () => {
     logger.info(`Server listening on port ${PORT}`);
@@ -176,5 +206,5 @@ server.listen(PORT, () => {
 logger.info(`AWS_REGION: ${process.env.AWS_REGION}`);
 logger.info(`AWS_ACCESS_KEY_ID: ${process.env.AWS_ACCESS_KEY_ID}`);
 logger.info(`AWS_SECRET_ACCESS_KEY: ${process.env.AWS_SECRET_ACCESS_KEY}`);
-console.log("AWS_REGION:", process.env.AWS_REGION);
+
 
