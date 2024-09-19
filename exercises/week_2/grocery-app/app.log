@@ -533,3 +533,13 @@ Stack: TypeError: Cannot read properties of undefined (reading '0')
 2024-09-19T18:50:48.599Z [info]: [DELETE /items]
 2024-09-19T18:51:05.313Z [info]: [DELETE /items]
 2024-09-19T18:54:53.263Z [info]: [DELETE /items]
+2024-09-19T19:11:14.598Z [info]: AWS_REGION: us-east-1
+2024-09-19T19:11:14.612Z [info]: AWS_ACCESS_KEY_ID: AKIAR3HUOKMLR7SYPAXY
+2024-09-19T19:11:14.613Z [info]: AWS_SECRET_ACCESS_KEY: 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
+2024-09-19T19:11:14.615Z [info]: Server listening on port 3000
+2024-09-19T19:12:03.560Z [info]: [DELETE /items]
+2024-09-19T19:12:10.788Z [info]: [DELETE /items]
+2024-09-19T19:12:43.426Z [info]: [DELETE /items]
+2024-09-19T19:13:00.941Z [info]: [DELETE /items]
+2024-09-19T19:13:16.998Z [info]: [DELETE /items]
+2024-09-19T19:14:16.573Z [info]: [DELETE /items]
